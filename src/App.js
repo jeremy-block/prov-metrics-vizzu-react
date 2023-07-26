@@ -1,7 +1,7 @@
 // Import necessary dependencies and components
 import Vizzu from "vizzu";
 import VizzuModule from 'vizzu/dist/cvizzu.wasm';
-import { data } from "./demoData";
+import { data } from "./recordData";
 import { useRef, useEffect, useState } from "react";
 import "./App.css";
 
@@ -17,9 +17,9 @@ function App() {
   // State to hold the selected x-dimension for chart breakdown
   const [xDimensionState, setXDimensionState] = useState();
 
-  // Extract all dimension names from the provided data
+  // Extract all measure names from the provided data
   const dimensions = data.series
-    .filter((s) => s.type === "dimension")
+    .filter((s) => s.type === "measure")
     .map((s) => s.name);
 
   // Use effect to handle changes in the selected x-dimension state
@@ -30,6 +30,7 @@ function App() {
     chartRef.current.animate({
       config: { channels: { x: { set: [xDimensionState] } } },
     });
+    // console.log(chartRef.current.config); //See the configuration for the most recently adjusted chart
   }, [xDimensionState]);
 
   // Use effect to initialize the chart when the component mounts (default)
@@ -43,9 +44,13 @@ function App() {
       chart.animate({
         config: {
           channels: {
+            x: { set: ["total_search_count"] },
             y: { set: ["total_search_count"] },
-            x: { set: ["total_drag - start_count"] },
+            color: "filename",
+            label: { set: ["filename"] },
           },
+          title: "Metrics Scatter plot",
+          geometry: "circle",
         },
       })
     );
@@ -56,7 +61,7 @@ function App() {
     <div id="wrapper">
       <h1>Vizzu React Example</h1>
       <canvas ref={canvasRef} style={{ width: "800px", height: "480px" }} />
-      <h2>Break it down by</h2>
+      <h2>Select an x Dimension</h2>
       <div id="breakdownSelector">
         {/* Map over the dimensions and create buttons to select the x-dimension */}
         {dimensions.map((dim) => {
