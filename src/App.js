@@ -43,8 +43,8 @@ function App() {
       chart.animate({
         config: {
           channels: {
-            y: { set: ["Popularity"] },
-            x: { set: ["Genres"] },
+            y: { set: ["total_search_count"] },
+            x: { set: ["total_drag - start_count"] },
           },
         },
       })
